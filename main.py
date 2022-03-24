@@ -24,23 +24,41 @@ def kmeans(data, k):
     return centroids, cluster
 
 
-def test_kmeans(data, country, k):
-    # right now only centroids are shown
-    centroids, cluster = kmeans(data, k)
+def clusters_to_colors(cluster):
+    colors = []
+    for i in range(len(cluster)):
+        if cluster[i] == 0:
+            colors.append('b')
+        elif cluster[i] == 1:
+            colors.append('g')
+        elif cluster[i] == 2:
+            colors.append('r')
+        elif cluster[i] == 3:
+            colors.append('c')
+        elif cluster[i] == 4:
+            colors.append('m')
+        elif cluster[i] == 5:
+            colors.append('y')
+    return colors
 
-    pyplot.scatter(data.lng, data.lat, color='k')
+
+def test_kmeans(data, country, k):
+    centroids, cluster = kmeans(data, k)
+    colors = clusters_to_colors(cluster)
+
+    pyplot.scatter(data.lng, data.lat, color=colors)
 
     for i in range(k):
-        pyplot.scatter(centroids[i][1], centroids[i][0], s=200, color='g')
+        pyplot.scatter(centroids[i][1], centroids[i][0], s=200, color='k')
 
     pyplot.title("Concentration of cities in " + country + " as clasterized by kmeans")
-    pyplot.xlabel('Latitude')
-    pyplot.ylabel('Longitude')
+    pyplot.xlabel('Longitude')
+    pyplot.ylabel('Latitude')
     pyplot.show()
 
 
 def main():
-    country = 'United States'
+    country = 'Poland'
 
     data = pandas.read_csv('worldcities.csv', usecols=['lat', 'lng', 'country'])
     data = data[data['country'] == country]
