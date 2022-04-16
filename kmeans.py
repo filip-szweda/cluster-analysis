@@ -19,7 +19,7 @@ class Point:
 def data_to_points(data):
     values = data.values
     points = []
-    for row, coordinates in enumerate(values):
+    for _, coordinates in enumerate(values):
         points.append(Point(coordinates[1], coordinates[0]))
     return points
 
@@ -33,7 +33,7 @@ def group_points_by_clusters(points, k):
 
 def calculate_new_centroids(points, k):
     grouped_points = group_points_by_clusters(points, k)
-    new_centroids = [0 for _ in range(k)]
+    new_centroids = [Point(0.0, 0.0) for _ in range(k)]
     for i in range(k):
         sum_x = 0
         sum_y = 0
