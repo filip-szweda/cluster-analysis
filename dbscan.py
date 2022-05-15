@@ -20,7 +20,7 @@ def db_scan(data, epsilon, min_points):
 
     while len(un_pts) != 0:
         # start finding points for a new cluster
-        first_point = True
+        first_point = 1
 
         # choose random index from the list of unvisited points
         curr_clust.add(choice(un_pts))
@@ -50,8 +50,9 @@ def db_scan(data, epsilon, min_points):
                 type_of_point = 2
 
             # if the first point is a border point, it's labeled as noise along with its neighbours
-            if type_of_point == 1 & first_point is True:
+            if type_of_point == 1 & first_point == 1:
                 clusters.append((index, 0))
+                n_indexes = set(un_pts) & set(n_indexes)
                 for neigh in n_indexes:
                     clusters.append((neigh, 0))
                 un_pts.remove(index)
@@ -67,7 +68,7 @@ def db_scan(data, epsilon, min_points):
 
             # if the element is core
             if type_of_point == 0:
-                first_point = False
+                first_point = 0
                 clusters.append((index, number_of_clusters))
                 # add neighbours of the core point to be examined next
                 curr_clust.update(n_indexes)
