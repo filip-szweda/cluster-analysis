@@ -1,29 +1,46 @@
-import pandas
 import numpy
-from random import sample
 from matplotlib import pyplot
 from math import sqrt
 from scipy.spatial import ConvexHull
 from scipy import interpolate
 
+from kmeans import kmeans
 
-def kmeans(values, k):
-    diff = True
-    clusters = [0 for _ in range(len(values))]
-    centroids = sample(list(values), k)
-    while diff:
-        for value_number, value in enumerate(values):
-            min_dist = float('inf')
-            for cluster_number, centroid in enumerate(centroids):
-                dist = sqrt((centroid[0] - value[0]) ** 2 + (centroid[1] - value[1]) ** 2)
-                if dist < min_dist:
-                    min_dist = dist
-                    clusters[value_number] = cluster_number
-        new_centroids = pandas.DataFrame(values).groupby(by=clusters).mean().values
-        if k == 2 or not numpy.count_nonzero(centroids - new_centroids):
-            diff = False
-        else:
-            centroids = new_centroids
+
+def sum_distances_from_centroid(centroid, values):
+    dist_sum = 0
+    for value in values:
+        dist_sum += sqrt((centroid[0] - value[0]) ** 2 + (centroid[1] - value[1]) ** 2)
+    return dist_sum
+
+
+def bisecting_kmeans(values, k):
+    centroids, clusters = kmeans(values, 2)
+    while len(centroids) < k:
+        max_dist = float('-inf')
+        values_to_divide = []
+        indices_to_divide = []
+        for cluster in range(len(clusters)):
+            indices = []
+            for index, assigned_cluster in enumerate(clusters):
+                if assigned_cluster == cluster:
+                    indices.append(index)
+            cluster_values = [values[i] for i in indices]
+            dist = sum_distances_from_centroid(centroids[cluster], cluster_values)
+            if dist > max_dist:
+                max_dist = dist
+                values_to_divide = cluster_values
+                indices_to_divide = indices
+                centroids_to_del = cluster
+
+        new_centroids, new_clusters = kmeans(values_to_divide, 2)
+        for i in range(len(new_clusters)):
+            new_clusters[i] += len(centroids) # this is wrong
+        for i, indice in enumerate(indices_to_divide):
+            clusters[indice] = new_clusters[i]
+        del centroids[centroids_to_del]
+        for cen in new_centroids:
+            centroids.append(cen)
     return centroids, clusters
 
 
@@ -57,9 +74,9 @@ def fill_interpolated_areas(k, clusters, values, color_map):
         pyplot.fill(interp_x, interp_y, '--', c=color_map(cluster_number), alpha=0.2)
 
 
-def plot_kmeans(data, country, k):
+def plot_bisecting_kmeans(data, country, k):
     values = data.values
-    centroids, clusters = kmeans(values, k)
+    centroids, clusters = bisecting_kmeans(values, k)
     color_map = pyplot.cm.get_cmap("hsv", k + 1)
 
     scatter_values(values, clusters, color_map)
