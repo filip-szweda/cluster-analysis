@@ -1,30 +1,7 @@
-import pandas
 import numpy
-from random import sample
 from matplotlib import pyplot
-from math import sqrt
 from scipy.spatial import ConvexHull
 from scipy import interpolate
-
-
-def kmeans(values, k):
-    diff = True
-    clusters = [0 for _ in range(len(values))]
-    centroids = sample(list(values), k)
-    while diff:
-        for value_number, value in enumerate(values):
-            min_dist = float('inf')
-            for cluster_number, centroid in enumerate(centroids):
-                dist = sqrt((centroid[0] - value[0]) ** 2 + (centroid[1] - value[1]) ** 2)
-                if dist < min_dist:
-                    min_dist = dist
-                    clusters[value_number] = cluster_number
-        new_centroids = pandas.DataFrame(values).groupby(by=clusters).mean().values
-        if k == 2 or not numpy.count_nonzero(centroids - new_centroids):
-            diff = False
-        else:
-            centroids = new_centroids
-    return centroids, clusters
 
 
 def scatter_values(values, clusters, color_map):
@@ -55,18 +32,3 @@ def fill_interpolated_areas(k, clusters, values, color_map):
         interp_y, interp_x = interpolate.splev(interp_d, spline)
 
         pyplot.fill(interp_x, interp_y, '--', c=color_map(cluster_number), alpha=0.2)
-
-
-def plot_kmeans(data, country, k):
-    values = data.values
-    centroids, clusters = kmeans(values, k)
-    color_map = pyplot.cm.get_cmap("hsv", k + 1)
-
-    scatter_values(values, clusters, color_map)
-    scatter_centroids(centroids, color_map)
-    fill_interpolated_areas(k, clusters, values, color_map)
-
-    pyplot.title("Concentration of cities in " + country + " as clasterized by kmeans")
-    pyplot.xlabel('Longitude')
-    pyplot.ylabel('Latitude')
-    pyplot.show()

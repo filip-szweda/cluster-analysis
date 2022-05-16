@@ -1,6 +1,5 @@
 from random import choice
 from numpy import sqrt
-from worldcities import parse_worldcities
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np

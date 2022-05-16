@@ -1,7 +1,7 @@
-from worldcities import parse_worldcities
-from kmeans import plot_kmeans
-from bisecting_kmeans import plot_bisecting_kmeans
-from dbscan import plot_dbscan
+from data.worldcities import parse_worldcities
+from methods.kmeans import plot_kmeans
+from methods.bisecting_kmeans import plot_bisecting_kmeans
+from methods.dbscan import plot_dbscan
 
 
 def main():
@@ -12,13 +12,13 @@ def main():
     data = parse_worldcities(country)
 
     # plot data as clasterized by kmeans
-    # plot_kmeans(data, country, 2)
+    plot_kmeans(data, country, 6)
 
     # plot data as clasterized by bisecting kmeans
     plot_bisecting_kmeans(data, country, 6)
 
     # plot data as clasterized by dbscan
-    # plot_dbscan(data, country, 0.4, 4)
+    plot_dbscan(data, country, 0.4, 4)
 
 
 if __name__ == '__main__':
