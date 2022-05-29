@@ -2,6 +2,7 @@ from data.worldcities import parse_worldcities
 from methods.kmeans import plot_kmeans
 from methods.bisecting_kmeans import plot_bisecting_kmeans
 from methods.dbscan import plot_dbscan
+from methods.hierarchical import plot_hierarchical
 
 
 def main():
@@ -19,6 +20,9 @@ def main():
 
     # plot data as clasterized by dbscan
     plot_dbscan(data, country, 0.4, 4)
+
+    # plot data as clasterized by hierarchical clustering
+    plot_hierarchical(data, country, 8)
 
 
 if __name__ == '__main__':
