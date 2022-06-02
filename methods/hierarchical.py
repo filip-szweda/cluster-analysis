@@ -1,8 +1,7 @@
 import math
 from math import sqrt
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
+from matplotlib import pyplot
+import methods.shared.plotting
 import scipy.cluster.hierarchy as shc
 
 
@@ -68,34 +67,21 @@ def hierarchical_clustering(data, n):
 
 
 def plot_hierarchical(data, country, n):
-    # dendrogram to determine the number of clusters and epsilon of the hierarchical clustering
-    # simply uncomment this fragment of code to determine the value of n needed for the particular data
-    # plt.figure(figsize=(10, 7))
-    # temp = shc.linkage(data, 'single')
-    # dend = shc.dendrogram(temp)
-    # plt.show()
-
     clustered = hierarchical_clustering(data, n)
+    values = data.values
+    color_map = pyplot.cm.get_cmap("hsv", n + 1)
 
-    index = []
-    clusters = []
+    tupled = []
     for i, cluster in enumerate(clustered):
         for point in cluster:
-            index.append(point)
-            clusters.append(i)
+            tupled.append((point, i))
 
-    # make a tuple out of clustered because it's the solution I know how to do
-    merged_list = [(index[i], clusters[i]) for i in range(0, len(index))]
+    tupled.sort()
+    index, clusters = list(zip(*tupled))
+    methods.shared.plotting.scatter_values(values, clusters, color_map)
+    methods.shared.plotting.fill_interpolated_areas(n, clusters, values, color_map)
 
-    clusters_df = pd.DataFrame(merged_list, columns=["index", "clusters"])
-
-    plt.figure(figsize=(7, 5))
-
-    for clust in np.unique(clusters):
-        plt.scatter(data.loc[clusters_df["index"][clusters_df["clusters"] == clust], 'lng'],
-                    data.loc[clusters_df["index"][clusters_df["clusters"] == clust], 'lat'], s=17)
-
-    plt.title("Concentration of cities in " + country + " as clasterized by hierarchical clustering")
-    plt.xlabel('Longitude')
-    plt.ylabel('Latitude')
-    plt.show()
+    pyplot.title("Concentration of cities in " + country + " as clasterized by hierarchical")
+    pyplot.xlabel('Longitude')
+    pyplot.ylabel('Latitude')
+    pyplot.show()
