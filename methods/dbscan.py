@@ -90,18 +90,15 @@ def db_scan(data, epsilon, min_points):
 
 
 def plot_dbscan(data, country, eps, min_pts):
-    clustered = db_scan(data, eps, min_pts)
+    clustered, n = db_scan(data, eps, min_pts)
+    clustered.sort()
     index, clusters = list(zip(*clustered))
-    clusters_df = pd.DataFrame(clustered, columns=["index", "clusters"])
+    values = data.values
+    color_map = pyplot.cm.get_cmap("hsv", n + 1)
+    scatter_values(values, clusters, color_map)
 
-    plt.figure(figsize=(8, 6))
-
-    for clust in np.unique(clusters):
-        plt.scatter(data.loc[clusters_df["index"][clusters_df["clusters"] == clust], 'lng'],
-                    data.loc[clusters_df["index"][clusters_df["clusters"] == clust], 'lat'], s=17)
-
-    plt.title("Concentration of cities in " + country + " as clasterized by dbscan")
-    plt.xlabel('Longitude')
-    plt.ylabel('Latitude')
-    plt.show()
+    pyplot.title("Concentration of cities in " + country + " as clasterized by dbscan")
+    pyplot.xlabel('Longitude')
+    pyplot.ylabel('Latitude')
+    pyplot.show()
 

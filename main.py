@@ -7,7 +7,7 @@ from methods.hierarchical import plot_hierarchical
 
 def main():
     # set country
-    country = 'Poland'
+    country = 'Belgium'
 
     # return lng and lat of cities
     data = parse_worldcities(country)
@@ -19,10 +19,10 @@ def main():
     plot_bisecting_kmeans(data, country, 6)
 
     # plot data as clasterized by dbscan
-    plot_dbscan(data, country, 0.4, 4)
+    plot_dbscan(data, country, 0.15, 8)
 
     # plot data as clasterized by hierarchical clustering
-    plot_hierarchical(data, country, 8)
+    plot_hierarchical(data, country, 5)
 
 
 if __name__ == '__main__':
