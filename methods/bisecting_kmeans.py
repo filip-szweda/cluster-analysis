@@ -51,7 +51,7 @@ def plot_bisecting_kmeans(data, country, k):
     methods.shared.plotting.scatter_centroids(centroids, color_map)
     methods.shared.plotting.fill_interpolated_areas(k, clusters, values, color_map)
 
-    pyplot.title("Concentration of cities in " + country + " as clasterized by kmeans")
+    pyplot.title("Concentration of cities in " + country + " as clasterized by bisecting kmeans")
     pyplot.xlabel('Longitude')
     pyplot.ylabel('Latitude')
     pyplot.show()
