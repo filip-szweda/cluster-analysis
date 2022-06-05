@@ -1,7 +1,8 @@
 from random import choice
 from numpy import sqrt
 import pandas as pd
-import matplotlib.pyplot as plt
+from matplotlib import pyplot
+import methods.shared.plotting
 import numpy as np
 
 
@@ -86,7 +87,7 @@ def db_scan(data, epsilon, min_points):
         if not first_point:
             number_of_clusters += 1
 
-    return clusters
+    return clusters, number_of_clusters
 
 
 def plot_dbscan(data, country, eps, min_pts):
@@ -95,7 +96,7 @@ def plot_dbscan(data, country, eps, min_pts):
     index, clusters = list(zip(*clustered))
     values = data.values
     color_map = pyplot.cm.get_cmap("hsv", n + 1)
-    scatter_values(values, clusters, color_map)
+    methods.shared.plotting.scatter_values(values, clusters, color_map)
 
     pyplot.title("Concentration of cities in " + country + " as clasterized by dbscan")
     pyplot.xlabel('Longitude')
